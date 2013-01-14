@@ -15,9 +15,12 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.staticfiles',
     'bootstrap',
+    'registration',
     'charge'
 ]
+
 ROOT_URLCONF = 'charge.urls'
+
 TEMPLATE_DIRS = 'src/charge/templates'
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.debug',
