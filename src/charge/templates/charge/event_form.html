@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
 
 {% block main %}
-<form action="{% url event_add %}" method="post">
+<form action="{% url event_add %}" method="post" class="well">
   {{ form.as_p }}
   {% csrf_token %}
-  <input type="submit" value="Submit" />
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </div>
 </form>
 {% endblock main %}

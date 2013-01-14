@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.conf.urls import patterns, url
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.generic import ListView, TemplateView
 
 from charge.models import Event
@@ -16,3 +17,5 @@ urlpatterns = patterns('',
     url(r'event/(?P<pk>\d+)/delete/$', EventDelete.as_view(),
             name='event_delete'),
 )
+
+urlpatterns += staticfiles_urlpatterns()
