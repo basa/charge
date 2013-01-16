@@ -6,6 +6,10 @@ from djmoney.models.fields import MoneyField
 
 
 class Event(models.Model):
+    """
+    Event with participants.
+    """
+
     creator = models.ForeignKey(User, related_name='+')
     participants = models.ManyToManyField(User)
     name = models.CharField(max_length=255)
@@ -14,8 +18,16 @@ class Event(models.Model):
 
 
 class Item(models.Model):
+    """
+    Cost can be positive and negative.
+    """
+
     creator = models.ForeignKey(User)
     event = models.ForeignKey(Event)
     name = models.CharField(max_length=255)
     cost = MoneyField(max_digits=12, decimal_places=2, default_currency='EUR')
     receipt = models.FileField(upload_to='receipts/%Y/%m/%d')
+
+
+class Bill(models.Model):
+    pass
