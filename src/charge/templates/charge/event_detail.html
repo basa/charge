@@ -5,12 +5,22 @@
 {% block main %}
   <h2>{{ object.name }}</h2>
   <div class="well well-small">
+    {% if user == object.creator %}
+    <p><a href="{% url event_update object.id %}">Edit</a>
+    {% endif %}
     <p>{{ object.name }}, {{ object.location }}, {{ object.start_date }}</p>
-    <h3>Teilnehmer</h3>
+    <h3>Participants</h3>
     <ul>
       {% for participant in object.participants.all %}
       <li>{{ participant }}</li>
       {% endfor %}
     </ul>
+    <h3>Items</h3>
+    <table>
+      <th>
+        <td>Name</td>
+        <td>Costs</td>
+      </th>
+    </table>
   </div>
 {% endblock %}

@@ -32,7 +32,13 @@
             <li><a href="{% url events %}">Events</a></li>
           </ul>
           <ul class="nav pull-right">
+            {% if user.is_authenticated %}
+            <li>{{ user.username }}</li>
+            <li><a href="{% url auth_logout %}">Log out</a></li>
+            {% else %}
+            <li><a href="{% url auth_login %}">Log in</a></li>
             <li><a href="{% url registration_register %}">Sign up</a></li>
+            {% endif %}
           </ul>
         </div>
       </div>
@@ -43,7 +49,7 @@
         {% for message in messages %}
           <div class="alert alert-{{message.tags}}">
             <a class="close" data-dismiss="alert">×</a>
-            {{message}}
+            {{ message }}
           </div>
         {% endfor %}
     </div>
