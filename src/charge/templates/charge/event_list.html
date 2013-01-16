@@ -4,10 +4,15 @@
 
 {% block main %}
     <h2>Events</h2>
-    <a href="{% url event_add %}">Add event</a>
+    <a href="{% url event_add %}" class="btn btn-success btn-large">
+        Add event
+    </a>
+    <hr />
+    {% if object_list %}
     <ul>
         {% for event in object_list %}
-            <li>{{ event.name }}</li>
+            <li><a href="{% url event event.id %}">{{ event.name }}</a></li>
         {% endfor %}
     </ul>
+    {% endif %}
 {% endblock %}

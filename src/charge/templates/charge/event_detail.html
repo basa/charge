@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ object.name }}{% endblock %}
+
+{% block main %}
+  <h2>{{ object.name }}</h2>
+  <div class="well well-small">
+    <p>{{ object.name }}, {{ object.location }}, {{ object.start_date }}</p>
+    <h3>Teilnehmer</h3>
+    <ul>
+      {% for participant in object.participants.all %}
+      <li>{{ participant }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}

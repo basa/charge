@@ -2,7 +2,7 @@
 
 from django.conf.urls import include, patterns, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from django.views.generic import ListView, TemplateView
+from django.views.generic import DetailView, ListView, TemplateView
 
 from charge.forms import RegistrationForm
 from charge.models import Event
@@ -23,9 +23,12 @@ urlpatterns = patterns('',
 
     # events
     url(r'^events/$', ListView.as_view(model=Event), name='events'),
-    url(r'event/add/$', EventCreate.as_view(), name='event_add'),
-    url(r'event/(?P<pk>\d+)/$', EventUpdate.as_view(), name='event_update'),
-    url(r'event/(?P<pk>\d+)/delete/$', EventDelete.as_view(),
+    url(r'^event/add/$', EventCreate.as_view(), name='event_add'),
+    url(r'^event/(?P<pk>\d+)/$', DetailView.as_view(model=Event),
+            name='event'),
+    url(r'^event/(?P<pk>\d+)/update/$', EventUpdate.as_view(),
+            name='event_update'),
+    url(r'^event/(?P<pk>\d+)/delete/$', EventDelete.as_view(),
             name='event_delete'),
 )
 
