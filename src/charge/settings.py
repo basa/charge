@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
+import os
+
 from django.core.urlresolvers import reverse_lazy
+
+
+PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
 DATABASES = {
     'default': {
@@ -24,7 +29,9 @@ INSTALLED_APPS = [
 ROOT_URLCONF = 'charge.urls'
 LOGIN_REDIRECT_URL = reverse_lazy('events')
 
-TEMPLATE_DIRS = 'src/charge/templates'
+TEMPLATE_DIRS = (
+    os.path.join(PROJECT_ROOT, 'templates'),
+)
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.debug',
     'django.core.context_processors.i18n',
