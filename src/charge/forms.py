@@ -1,17 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from bootstrap.forms import BootstrapMixin, BootstrapModelForm, Fieldset
+from django.contrib.auth import forms as auth_forms
 from registration.forms import RegistrationFormUniqueEmail
 
 from charge.models import Event, Item
-
-
-class RegistrationForm(BootstrapMixin, RegistrationFormUniqueEmail):
-    """
-    BootstrapForm for registration with unique email.
-    """
-
-    pass
 
 
 class EventForm(BootstrapModelForm):
@@ -42,3 +35,19 @@ class ItemForm(BootstrapModelForm):
             Fieldset('Add a Item', 'event', 'name', 'cost',
                     'receipt'),
         )
+
+
+class AuthenticationForm(BootstrapMixin, auth_forms.AuthenticationForm):
+    """
+    BootstrapForm for authentication.
+    """
+
+    pass
+
+
+class RegistrationForm(BootstrapMixin, RegistrationFormUniqueEmail):
+    """
+    BootstrapForm for registration with unique email.
+    """
+
+    pass
