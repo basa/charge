@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from django.core.urlresolvers import reverse_lazy
 
 DATABASES = {
     'default': {
@@ -19,7 +20,9 @@ INSTALLED_APPS = [
     'charge'
 ]
 
+
 ROOT_URLCONF = 'charge.urls'
+LOGIN_REDIRECT_URL = reverse_lazy('events')
 
 TEMPLATE_DIRS = 'src/charge/templates'
 TEMPLATE_CONTEXT_PROCESSORS = (

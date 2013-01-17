@@ -1,0 +1,23 @@
+{% extends 'registration/registration_base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block main %}
+<h2>Login</h2>
+
+{% if form.errors %}
+<p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+<div class="well">
+  <form action="" method="post">
+    {{ form }}
+    <input type="hidden" name="next" value="{{ next }}" />
+    {% csrf_token %}
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Login</button>
+    </div>
+  </form>
+  <p><a href="{% url registration_register %}">Need an account</a>?</p>
+</div>
+{% endblock %}
