@@ -27,7 +27,7 @@ INSTALLED_APPS = [
 
 
 ROOT_URLCONF = 'charge.urls'
-LOGIN_REDIRECT_URL = reverse_lazy('events')
+LOGIN_REDIRECT_URL = reverse_lazy('overview')
 
 TEMPLATE_DIRS = (
     os.path.join(PROJECT_ROOT, 'templates'),

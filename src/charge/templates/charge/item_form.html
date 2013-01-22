@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
-{% block title %}Add a Event{% endblock %}
+{% block title %}Add a Item{% endblock %}
 
 {% block main %}
-<form action="" method="post" class="well">
+<form action="{% url item_add %}" method="post" class="well">
   {{ form }}
   {% csrf_token %}
   <div class="form-actions">

@@ -10,6 +10,11 @@ body.shaded {
     padding-bottom: 40px;
 }
 
+.navbar .nav > li > a.btn-success {
+    color: #ffffff;
+    text-shadow: none;
+}
+
 .form-short {
     max-width: 300px;
     padding: 19px 29px 29px;

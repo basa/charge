@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Overview{% endblock %}
+
+{% block main %}
+  <h2>My Events</h2>
+
+  {% if object_list %}
+  <table class="well">
+    <tr>
+      <th>Event</th>
+      <th>Location</th>
+      <th>Start date</th>
+      <th>Shortcuts</th>
+    </tr>
+    {% for event in object_list %}
+    <tr>
+      <td><a href="{% url event event.id %}">{{ event.name }}</a></td>
+      <td>{{ event.location }}</td>
+      <td>{{ event.start_date }}</td>
+      <td><a href="{% url item_add %}">Add Item</a></td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p>No Events.</p>
+  {% endif %}
+
+  <div class="form-actions">
+    <p><a href="{% url event_add %}" class="btn{% if not object_list %} btn-large btn-success{% endif %}">Create Event</a></p>
+  </div>
+{% endblock %}

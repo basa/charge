@@ -6,9 +6,10 @@
   <h2>{{ object.name }}</h2>
   <div class="well well-small">
     {% if user == object.creator %}
-    <p><a href="{% url event_update object.id %}">Edit</a>
+    <p><a href="{% url event_update object.id %}" class="btn">Edit</a>
     {% endif %}
     <p>{{ object.name }}, {{ object.location }}, {{ object.start_date }}</p>
+    <p>by {{ object.creator }}</p>
     <h3>Participants</h3>
     <ul>
       {% for participant in object.participants.all %}
@@ -16,11 +17,23 @@
       {% endfor %}
     </ul>
     <h3>Items</h3>
+    <p><a href="{% url item_add %}" class="btn">Add Item</a></p>
+    {% if items %}
     <table>
-      <th>
-        <td>Name</td>
-        <td>Costs</td>
-      </th>
+      <tr>
+        <th>Name</th>
+        <th>Costs</th>
+      </tr>
+      {% for item in items %}
+      <tr>
+        <td>{{ item.name }}</td>
+        <td>{{ item.cost }}</td>
+      </tr>
+      {% endfor %}
     </table>
+    {% else %}
+    There are no Items.
+    {% endif %}
   </div>
+  <p><a href="{% url overview %}">Back to Overview</a></p>
 {% endblock %}

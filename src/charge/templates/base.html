@@ -29,15 +29,15 @@
         <div class="container">
           <a class="brand" href="{% url index %}">Charge</a>
           <ul class="nav nav-pills">
-            <li><a href="{% url events %}">Events</a></li>
+            <li><a href="{% url overview %}">Overview</a></li>
           </ul>
           <ul class="nav pull-right">
             {% if user.is_authenticated %}
             <li>{{ user.username }}</li>
             <li><a href="{% url auth_logout %}">Log out</a></li>
             {% else %}
+            <li><a href="{% url registration_register %}" class="btn-success">Sign up</a></li>
             <li><a href="{% url auth_login %}">Log in</a></li>
-            <li><a href="{% url registration_register %}">Sign up</a></li>
             {% endif %}
           </ul>
         </div>
