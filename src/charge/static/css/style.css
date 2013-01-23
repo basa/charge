@@ -15,6 +15,10 @@ body.shaded {
     text-shadow: none;
 }
 
+.top-buffer {
+    margin-top:20px;
+}
+
 .form-short {
     max-width: 300px;
     padding: 19px 29px 29px;

@@ -33,7 +33,7 @@
           </ul>
           <ul class="nav pull-right">
             {% if user.is_authenticated %}
-            <li>{{ user.username }}</li>
+            <li><a href="{{ user.get_absolute_url }}">{{ user.username }}</a></li>
             <li><a href="{% url auth_logout %}">Log out</a></li>
             {% else %}
             <li><a href="{% url registration_register %}" class="btn-success">Sign up</a></li>
