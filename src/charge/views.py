@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from django.views.generic import detail, edit, list
 from django.core.urlresolvers import reverse_lazy
+from django.db.models import Q
+from django.views.generic import detail, edit, list
 
 from charge import forms, models
 
@@ -21,10 +22,17 @@ class BaseCreateView(CreatorMixin, edit.CreateView):
 
 class BaseUpdateView(CreatorMixin, edit.UpdateView):
     """
-    success_url_name
+    Attributes:
+        success_url_name
     """
     def get_success_url(self):
         return reverse_lazy(self.success_url_name, args=[self.object.pk])
+
+    def get_queryset(self):
+        """ User should only update his objects. """
+        base_qs = super(BaseUpdateView, self).get_queryset()
+        current_user = self.request.user
+        return base_qs.filter(creator=current_user)
 
 
 class EventCreate(BaseCreateView):
@@ -78,9 +86,12 @@ class ItemDelete(edit.DeleteView):
 
 
 class Overview(list.ListView):
+    model = models.Event
     template_name = 'charge/overview.html'
 
     def get_queryset(self):
+        """ User should only see his objects. """
+        base_qs = super(Overview, self).get_queryset()
         current_user = self.request.user
-
-        return models.Event.objects.filter(creator=current_user)
+        return base_qs.filter(Q(creator=current_user) |
+                Q(participants=current_user))

@@ -11,13 +11,15 @@
       <th>Event</th>
       <th>Location</th>
       <th>Start date</th>
+      <th>Creator</th>
       <th>Shortcuts</th>
     </tr>
     {% for event in object_list %}
     <tr>
-      <td><a href="{% url event event.id %}">{{ event.name }}</a></td>
+      <td><a href="{{ event.get_absolute_url }}">{{ event.name }}</a></td>
       <td>{{ event.location }}</td>
       <td>{{ event.start_date }}</td>
+      <td><a href="{{ event.creator.get_absolute_url }}">{{ event.creator }}</a></td>
       <td><a href="{% url item_add %}">Add Item</a></td>
     </tr>
     {% endfor %}
