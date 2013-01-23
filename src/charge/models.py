@@ -22,11 +22,13 @@ class Event(models.Model):
 
 class Item(models.Model):
     """
-    Cost can be positive and negative.
+    Attributes:
+        cost: can be positive and negative.
     """
     creator = models.ForeignKey(User)
     event = models.ForeignKey(Event)
     name = models.CharField(max_length=255)
+    # TODO find out how default_currency and django-boostrap can work together
     cost = MoneyField(max_digits=12, decimal_places=2, default_currency='EUR')
     receipt = models.FileField(upload_to='receipts/%Y/%m/%d', null=True,
             blank=True)

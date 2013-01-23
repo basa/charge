@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
-{% block title %}Delete Event{% endblock %}
+{% block title %}Delete {{ object.name }}{% endblock %}
 
 {% block main %}
-  <p>Are you sure that you would like to delete the Event {{ object.name }}?</p>
+  <p>Are you sure that you would like to delete {{ object.name }}?</p>
   <form method="POST" action="">
     <button type="submit" class="btn btn-danger">Yes</button>
     <a href="{{ object.get_absolute_url }}">No</a>

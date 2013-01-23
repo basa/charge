@@ -35,6 +35,7 @@
         <th>Name</th>
         <th>Costs</th>
         <th>Creator</th>
+        <th>Actions</th>
       </tr>
       </thead>
       <tbody>
@@ -43,6 +44,11 @@
         <td>{{ item.name }}</td>
         <td>{{ item.cost }}</td>
         <td>{{ item.creator }}</td>
+        <td>
+          {% if item.creator == user %}
+          <a href="{% url item_delete item.pk %}">Delete</a>
+          {% endif %}
+        </td>
       </tr>
       {% endfor %}
       </tbody>
@@ -51,11 +57,13 @@
     There are no Items.
     {% endif %}
 
+    {% if object.creator == user %}
     <div class="form-actions">
       <a href="{% url event_delete object.pk %}" class="btn btn-danger">
         Delete Event
       </a>
     </div>
+    {% endif %}
   </div>
   <p><a href="{% url overview %}">Back to Overview</a></p>
 {% endblock %}

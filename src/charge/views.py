@@ -50,6 +50,7 @@ class BaseDeleteView(FilterCreatorMixin, edit.DeleteView):
     DeleteView with user filter and redirect to Overview.
     """
     success_url = reverse_lazy('overview')
+    template_name = 'charge/object_confirm_delete.html'
 
 
 ### Event Related #############################################################
