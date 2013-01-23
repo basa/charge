@@ -27,6 +27,7 @@ INSTALLED_APPS = [
 
 
 ROOT_URLCONF = 'charge.urls'
+LOGIN_URL = reverse_lazy('auth_login')
 LOGIN_REDIRECT_URL = reverse_lazy('overview')
 
 TEMPLATE_DIRS = (

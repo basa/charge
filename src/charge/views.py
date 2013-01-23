@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.views.generic import detail, edit, list
 
 from charge import forms, models
+from charge.utils import login_required
 
 
 class CreatorMixin(object):
@@ -35,12 +36,14 @@ class BaseUpdateView(CreatorMixin, edit.UpdateView):
         return base_qs.filter(creator=current_user)
 
 
+@login_required
 class EventCreate(BaseCreateView):
     model = models.Event
     form_class = forms.EventForm
     success_url = reverse_lazy('overview')
 
 
+@login_required
 class EventDetail(detail.DetailView):
     """
     Represents an individual Event object.
@@ -56,6 +59,7 @@ class EventDetail(detail.DetailView):
         return context
 
 
+@login_required
 class EventUpdate(BaseUpdateView):
     model = models.Event
     form_class = forms.EventForm
@@ -63,17 +67,20 @@ class EventUpdate(BaseUpdateView):
 
 
 # TODO add has delete permission decorator
+@login_required
 class EventDelete(edit.DeleteView):
     model = models.Event
 
 
 # TODO add event parameter
+@login_required
 class ItemCreate(BaseCreateView):
     model = models.Item
     form_class = forms.ItemForm
     success_url = reverse_lazy('overview')
 
 
+@login_required
 class ItemUpdate(BaseUpdateView):
     model = models.Item
     form_class = forms.ItemForm
@@ -81,10 +88,12 @@ class ItemUpdate(BaseUpdateView):
 
 
 # TODO add has delete permission decorator
+@login_required
 class ItemDelete(edit.DeleteView):
     model = models.Item
 
 
+@login_required
 class Overview(list.ListView):
     model = models.Event
     template_name = 'charge/overview.html'
