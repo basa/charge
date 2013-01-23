@@ -18,7 +18,7 @@ class CreatorMixin(object):
 
 
 class BaseCreateView(CreatorMixin, edit.CreateView):
-    pass
+    success_url = reverse_lazy('overview')
 
 
 class BaseUpdateView(CreatorMixin, edit.UpdateView):
@@ -36,11 +36,20 @@ class BaseUpdateView(CreatorMixin, edit.UpdateView):
         return base_qs.filter(creator=current_user)
 
 
+class BaseDeleteView(edit.DeleteView):
+    success_url = reverse_lazy('overview')
+
+    def get_queryset(self):
+        """ User should only delete his objects. """
+        base_qs = super(BaseDeleteView, self).get_queryset()
+        current_user = self.request.user
+        return base_qs.filter(creator=current_user)
+
+
 @login_required
 class EventCreate(BaseCreateView):
     model = models.Event
     form_class = forms.EventForm
-    success_url = reverse_lazy('overview')
 
 
 @login_required
@@ -66,9 +75,8 @@ class EventUpdate(BaseUpdateView):
     success_url_name = 'event'
 
 
-# TODO add has delete permission decorator
 @login_required
-class EventDelete(edit.DeleteView):
+class EventDelete(BaseDeleteView):
     model = models.Event
 
 
@@ -77,7 +85,6 @@ class EventDelete(edit.DeleteView):
 class ItemCreate(BaseCreateView):
     model = models.Item
     form_class = forms.ItemForm
-    success_url = reverse_lazy('overview')
 
 
 @login_required
@@ -87,9 +94,8 @@ class ItemUpdate(BaseUpdateView):
     success_url_name = 'item'
 
 
-# TODO add has delete permission decorator
 @login_required
-class ItemDelete(edit.DeleteView):
+class ItemDelete(BaseDeleteView):
     model = models.Item
 
 
@@ -103,4 +109,4 @@ class Overview(list.ListView):
         base_qs = super(Overview, self).get_queryset()
         current_user = self.request.user
         return base_qs.filter(Q(creator=current_user) |
-                Q(participants=current_user))
+                Q(participants=current_user)).distinct()

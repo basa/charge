@@ -50,6 +50,12 @@
     {% else %}
     There are no Items.
     {% endif %}
+
+    <div class="form-actions">
+      <a href="{% url event_delete object.pk %}" class="btn btn-danger">
+        Delete Event
+      </a>
+    </div>
   </div>
   <p><a href="{% url overview %}">Back to Overview</a></p>
 {% endblock %}
