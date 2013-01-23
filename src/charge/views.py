@@ -8,6 +8,8 @@ from charge import forms, models
 from charge.utils import login_required
 
 
+### Mixins ####################################################################
+
 class CreatorMixin(object):
     """
     Assigns requesting user as creator to the model object.
@@ -17,11 +19,24 @@ class CreatorMixin(object):
         return super(CreatorMixin, self).form_valid(form)
 
 
+class FilterCreatorMixin(object):
+    """
+    User should only access his objects.
+    """
+    def get_queryset(self):
+        """ Queryset is filtered creator == request.user. """
+        base_qs = super(FilterCreatorMixin, self).get_queryset()
+        current_user = self.request.user
+        return base_qs.filter(creator=current_user)
+
+
+### BaseViews #################################################################
+
 class BaseCreateView(CreatorMixin, edit.CreateView):
     success_url = reverse_lazy('overview')
 
 
-class BaseUpdateView(CreatorMixin, edit.UpdateView):
+class BaseUpdateView(FilterCreatorMixin, edit.UpdateView):
     """
     Attributes:
         success_url_name
@@ -29,22 +44,15 @@ class BaseUpdateView(CreatorMixin, edit.UpdateView):
     def get_success_url(self):
         return reverse_lazy(self.success_url_name, args=[self.object.pk])
 
-    def get_queryset(self):
-        """ User should only update his objects. """
-        base_qs = super(BaseUpdateView, self).get_queryset()
-        current_user = self.request.user
-        return base_qs.filter(creator=current_user)
 
-
-class BaseDeleteView(edit.DeleteView):
+class BaseDeleteView(FilterCreatorMixin, edit.DeleteView):
+    """
+    DeleteView with user filter and redirect to Overview.
+    """
     success_url = reverse_lazy('overview')
 
-    def get_queryset(self):
-        """ User should only delete his objects. """
-        base_qs = super(BaseDeleteView, self).get_queryset()
-        current_user = self.request.user
-        return base_qs.filter(creator=current_user)
 
+### Event Related #############################################################
 
 @login_required
 class EventCreate(BaseCreateView):
@@ -79,6 +87,8 @@ class EventUpdate(BaseUpdateView):
 class EventDelete(BaseDeleteView):
     model = models.Event
 
+
+### Item related ##############################################################
 
 # TODO add event parameter
 @login_required
