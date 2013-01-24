@@ -9,7 +9,7 @@ from django.views.generic import DetailView, TemplateView
 from charge.forms import AuthenticationForm, RegistrationForm
 from charge.models import Item
 from charge.views import (EventCreate, EventDelete, EventDetail, EventUpdate,
-        ItemCreate, ItemDelete, ItemUpdate, Overview)
+        ItemCreate, ItemDelete, ItemUpdate, Logout, Overview)
 
 
 urlpatterns = patterns('',
@@ -19,8 +19,7 @@ urlpatterns = patterns('',
     url(r'^login/$', auth_views.login,
             {'authentication_form': AuthenticationForm,
              'template_name': 'registration/login.html'}, name='auth_login'),
-    url(r'^logout/$', auth_views.logout,
-            {'template_name': 'registration/logout.html'}, name='auth_logout'),
+    url(r'^logout/$', Logout.as_view(), name='auth_logout'),
     # django-registration
     url(r'^register/$', 'registration.views.register',
             {'backend': 'registration.backends.simple.SimpleBackend',

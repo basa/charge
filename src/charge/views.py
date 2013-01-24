@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from django.core.urlresolvers import reverse_lazy
+from django.contrib import messages
+from django.contrib.auth import views as auth_views
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.db.models import Q
-from django.views.generic import detail, edit, list
+from django.utils.translation import ugettext as _
+from django.views.generic import base, detail, edit, list
 
 from charge import forms, models
 from charge.utils import login_required
@@ -21,34 +24,64 @@ class CreatorMixin(object):
 
 class FilterCreatorMixin(object):
     """
-    User should only access his objects.
+    Limit a User to only obtain their own data.
     """
     def get_queryset(self):
-        """ Queryset is filtered creator == request.user. """
+        """ Limit the queryset to the requesting user. """
         base_qs = super(FilterCreatorMixin, self).get_queryset()
         current_user = self.request.user
         return base_qs.filter(creator=current_user)
 
 
+class MessageMixin(object):
+    """
+    Make it easy to display notification messages when using Class Based Views.
+    """
+    def delete(self, request, *args, **kwargs):
+        name = self.get_object().name
+        msg = self.success_message.format(name=name)
+        messages.success(self.request, msg)
+        return super(MessageMixin, self).delete(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        # support update existing object and create object form form
+        name = (self.object.name if self.object is not None else
+                form.cleaned_data['name'])
+        msg = self.success_message.format(name=name)
+        messages.success(self.request, msg)
+        return super(MessageMixin, self).form_valid(form)
+
+
 ### BaseViews #################################################################
 
-class BaseCreateView(CreatorMixin, edit.CreateView):
+class BaseCreateView(CreatorMixin, MessageMixin, edit.CreateView):
+    """
+    The used Model should have a creator and name field.
+    """
+    success_message = '{name} created successfully'
     success_url = reverse_lazy('overview')
 
 
-class BaseUpdateView(FilterCreatorMixin, edit.UpdateView):
+class BaseUpdateView(FilterCreatorMixin, MessageMixin, edit.UpdateView):
     """
+    The used Model should have a creator and name field.
+
     Attributes:
         success_url_name
     """
+    success_message = '{name} updated successfully'
+
     def get_success_url(self):
         return reverse_lazy(self.success_url_name, args=[self.object.pk])
 
 
-class BaseDeleteView(FilterCreatorMixin, edit.DeleteView):
+class BaseDeleteView(FilterCreatorMixin, MessageMixin, edit.DeleteView):
     """
     DeleteView with user filter and redirect to Overview.
+
+    The used Model should have a creator and name field.
     """
+    success_message = '{name} deleted successfully'
     success_url = reverse_lazy('overview')
     template_name = 'charge/object_confirm_delete.html'
 
@@ -121,3 +154,15 @@ class Overview(list.ListView):
         current_user = self.request.user
         return base_qs.filter(Q(creator=current_user) |
                 Q(participants=current_user)).distinct()
+
+
+@login_required
+class Logout(base.View):
+    def get(self, request, *args, **kwargs):
+        """
+        Signs out the user and adds a success message.
+        """
+        messages.success(request, _('You have been signed out.'),
+                fail_silently=True)
+        login_url = reverse('auth_login')
+        return auth_views.logout(request, next_page=login_url, *args, **kwargs)
