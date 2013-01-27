@@ -33,36 +33,24 @@ class FilterCreatorMixin(object):
         return base_qs.filter(creator=current_user)
 
 
-class MessageMixin(object):
-    """
-    Make it easy to display notification messages when using Class Based Views.
-    """
-    def delete(self, request, *args, **kwargs):
-        name = self.get_object().name
-        msg = self.success_message.format(name=name)
-        messages.success(self.request, msg)
-        return super(MessageMixin, self).delete(request, *args, **kwargs)
-
-    def form_valid(self, form):
-        # support update existing object and create object form form
-        name = (self.object.name if self.object is not None else
-                form.cleaned_data['name'])
-        msg = self.success_message.format(name=name)
-        messages.success(self.request, msg)
-        return super(MessageMixin, self).form_valid(form)
-
-
 ### BaseViews #################################################################
 
-class BaseCreateView(CreatorMixin, MessageMixin, edit.CreateView):
+class BaseCreateView(CreatorMixin, edit.CreateView):
     """
     The used Model should have a creator and name field.
     """
     success_message = '{name} created successfully'
     success_url = reverse_lazy('overview')
 
+    def form_valid(self, form):
+        """ Display success message. """
+        name = form.cleaned_data['name']
+        msg = self.success_message.format(name=name)
+        messages.success(self.request, msg)
+        return super(BaseCreateView, self).form_valid(form)
 
-class BaseUpdateView(FilterCreatorMixin, MessageMixin, edit.UpdateView):
+
+class BaseUpdateView(FilterCreatorMixin, edit.UpdateView):
     """
     The used Model should have a creator and name field.
 
@@ -71,11 +59,18 @@ class BaseUpdateView(FilterCreatorMixin, MessageMixin, edit.UpdateView):
     """
     success_message = '{name} updated successfully'
 
+    def form_valid(self, form):
+        """ Display success message. """
+        name = self.object.name
+        msg = self.success_message.format(name=name)
+        messages.success(self.request, msg)
+        return super(BaseUpdateView, self).form_valid(form)
+
     def get_success_url(self):
         return reverse_lazy(self.success_url_name, args=[self.object.pk])
 
 
-class BaseDeleteView(FilterCreatorMixin, MessageMixin, edit.DeleteView):
+class BaseDeleteView(FilterCreatorMixin, edit.DeleteView):
     """
     DeleteView with user filter and redirect to Overview.
 
@@ -84,6 +79,13 @@ class BaseDeleteView(FilterCreatorMixin, MessageMixin, edit.DeleteView):
     success_message = '{name} deleted successfully'
     success_url = reverse_lazy('overview')
     template_name = 'charge/object_confirm_delete.html'
+
+    def delete(self, request, *args, **kwargs):
+        """ Display success message. """
+        name = self.get_object().name
+        msg = self.success_message.format(name=name)
+        messages.success(self.request, msg)
+        return super(BaseDeleteView, self).delete(request, *args, **kwargs)
 
 
 ### Event Related #############################################################
