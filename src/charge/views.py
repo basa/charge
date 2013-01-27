@@ -53,9 +53,6 @@ class BaseCreateView(CreatorMixin, edit.CreateView):
 class BaseUpdateView(FilterCreatorMixin, edit.UpdateView):
     """
     The used Model should have a creator and name field.
-
-    Attributes:
-        success_url_name
     """
     success_message = '{name} updated successfully'
 
@@ -65,9 +62,6 @@ class BaseUpdateView(FilterCreatorMixin, edit.UpdateView):
         msg = self.success_message.format(name=name)
         messages.success(self.request, msg)
         return super(BaseUpdateView, self).form_valid(form)
-
-    def get_success_url(self):
-        return reverse_lazy(self.success_url_name, args=[self.object.pk])
 
 
 class BaseDeleteView(FilterCreatorMixin, edit.DeleteView):
@@ -116,7 +110,9 @@ class EventDetail(detail.DetailView):
 class EventUpdate(BaseUpdateView):
     model = models.Event
     form_class = forms.EventForm
-    success_url_name = 'event'
+
+    def get_success_url(self):
+        return reverse_lazy('event', args=[self.object.pk])
 
 
 @login_required
@@ -137,7 +133,9 @@ class ItemCreate(BaseCreateView):
 class ItemUpdate(BaseUpdateView):
     model = models.Item
     form_class = forms.ItemForm
-    success_url_name = 'item'
+
+    def get_success_url(self):
+        return reverse_lazy('event', args=[self.object.event.pk])
 
 
 @login_required

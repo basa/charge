@@ -46,7 +46,8 @@
         <td>{{ item.creator }}</td>
         <td>
           {% if item.creator == user %}
-          <a href="{% url item_delete item.pk %}">Delete</a>
+          <a href="{% url item_update item.pk %}" title="Edit"><i class="icon-pencil"></i></a>
+          <a href="{% url item_delete item.pk %}" title="Delete"><i class="icon-remove"></i></a>
           {% endif %}
         </td>
       </tr>

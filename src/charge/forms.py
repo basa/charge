@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import datetime
-
 from bootstrap.forms import BootstrapMixin, BootstrapModelForm, Fieldset
 from django.contrib.auth import forms as auth_forms
 from django.forms.widgets import SplitDateTimeWidget
@@ -9,7 +7,18 @@ from registration.forms import RegistrationFormUniqueEmail
 from charge.models import Event, Item
 
 
-class EventForm(BootstrapModelForm):
+class BaseForm(BootstrapModelForm):
+    def __init__(self, *args, **kwargs):
+        """ Generate legend text automatically. """
+        super(BaseForm, self).__init__(*args, **kwargs)
+
+        status = 'Create' if self.instance._state.adding else 'Update'
+        model_name = self.Meta.model._meta.verbose_name
+        self.Meta.layout[0].legend = '{status} {model_name}'.format(
+                model_name=model_name, status=status)
+
+
+class EventForm(BaseForm):
     """
     BootstrapForm for Event model.
     """
@@ -18,7 +27,7 @@ class EventForm(BootstrapModelForm):
         # creator would be assigned programmatically
         exclude = ('creator',)
         layout = (
-            Fieldset('Add a Event', 'name', 'location', 'start_date',
+            Fieldset('', 'name', 'location', 'start_date',
                     'participants'),
         )
         widgets = {
@@ -26,7 +35,7 @@ class EventForm(BootstrapModelForm):
         }
 
 
-class ItemForm(BootstrapModelForm):
+class ItemForm(BaseForm):
     """
     BootstrapForm for Item model.
     """
@@ -35,7 +44,7 @@ class ItemForm(BootstrapModelForm):
         # creator would be assigned programmatically
         exclude = ('creator',)
         layout = (
-            Fieldset('Add a Item', 'event', 'name', 'cost',
+            Fieldset('', 'event', 'name', 'cost',
                     'receipt'),
         )
 
