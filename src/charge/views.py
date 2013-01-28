@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
+from django.http import Http404
 from django.contrib import messages
 from django.contrib.auth import views as auth_views
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.db.models import Q
 from django.utils.translation import ugettext as _
 from django.views.generic import base, detail, edit, list
+from django.shortcuts import redirect
 
 from charge import forms, models
 from charge.utils import login_required
@@ -155,7 +157,6 @@ class Overview(list.ListView):
         return base_qs.filter(Q(creator=current_user) |
                 Q(participants=current_user)).distinct()
 
-
 @login_required
 class Logout(base.View):
     def get(self, request, *args, **kwargs):
@@ -166,3 +167,9 @@ class Logout(base.View):
                 fail_silently=True)
         login_url = reverse('auth_login')
         return auth_views.logout(request, next_page=login_url, *args, **kwargs)
+
+def user(request, user):
+    if user == request.user.username:
+      return redirect('/overview/')
+    else:
+      raise Http404()

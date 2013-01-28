@@ -55,6 +55,7 @@ urlpatterns = patterns('',
 
     # user
     url(r'^overview/$', Overview.as_view(), name='overview'),
+    url(r'^users/(?P<user>\w+)/$', 'charge.views.user', name='user')
 )
 
 if settings.DEBUG:
