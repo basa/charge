@@ -4,4 +4,5 @@ bin
 dist
 parts
 src/*.egg-info
+var
 
