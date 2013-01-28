@@ -24,8 +24,11 @@ INSTALLED_APPS = [
     'django.contrib.comments',
     'bootstrap',
     'registration',
-    'charge'
+    'charge',
+    'my_comments',
 ]
+
+COMMENTS_APP = 'my_comments'
 
 
 ROOT_URLCONF = 'charge.urls'
