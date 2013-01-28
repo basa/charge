@@ -20,6 +20,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.admin',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.comments',
     'bootstrap',
     'registration',
     'charge'
@@ -29,6 +31,8 @@ INSTALLED_APPS = [
 ROOT_URLCONF = 'charge.urls'
 LOGIN_URL = reverse_lazy('auth_login')
 LOGIN_REDIRECT_URL = reverse_lazy('overview')
+
+SITE_ID = 1
 
 TEMPLATE_DIRS = (
     os.path.join(PROJECT_ROOT, 'templates'),

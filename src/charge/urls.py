@@ -49,6 +49,9 @@ urlpatterns = patterns('',
             name='item_update'),
     url(r'^item/(?P<pk>\d+)/delete/$', ItemDelete.as_view(),
             name='item_delete'),
+            
+    # Event/Comments related
+    url(r'^comments/', include('django.contrib.comments.urls')),
 
     # user
     url(r'^overview/$', Overview.as_view(), name='overview'),
