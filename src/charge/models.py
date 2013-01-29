@@ -20,6 +20,9 @@ class Event(models.Model):
     def get_absolute_url(self):
         return reverse('event', args=[str(self.pk)])
 
+    def __unicode__(self):
+        return self.name
+
 
 class Item(models.Model):
     """
@@ -36,6 +39,9 @@ class Item(models.Model):
 
     def get_absolute_url(self):
         return reverse('item', args=[str(self.pk)])
+
+    def __unicode__(self):
+        return self.name
 
 
 class Bill(models.Model):
