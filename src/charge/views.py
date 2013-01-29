@@ -73,7 +73,6 @@ class BaseDeleteView(FilterCreatorMixin, edit.DeleteView):
     The used Model should have a creator and name field.
     """
     success_message = '{name} deleted successfully'
-    success_url = reverse_lazy('overview')
     template_name = 'charge/object_confirm_delete.html'
 
     def delete(self, request, *args, **kwargs):
@@ -125,6 +124,7 @@ class EventUpdate(BaseUpdateView):
 @login_required
 class EventDelete(BaseDeleteView):
     model = models.Event
+    success_url = reverse_lazy('overview')
 
 
 ### Item related ##############################################################
@@ -149,6 +149,9 @@ class ItemUpdate(BaseUpdateView):
 class ItemDelete(BaseDeleteView):
     model = models.Item
 
+    def get_success_url(self):
+        return reverse_lazy('event', args=[self.object.event.pk])
+
 
 @login_required
 class Overview(list.ListView):
@@ -162,6 +165,7 @@ class Overview(list.ListView):
         return base_qs.filter(Q(creator=current_user) |
                 Q(participants=current_user)).distinct()
 
+
 @login_required
 class Logout(base.View):
     def get(self, request, *args, **kwargs):
@@ -173,8 +177,9 @@ class Logout(base.View):
         login_url = reverse('auth_login')
         return auth_views.logout(request, next_page=login_url, *args, **kwargs)
 
+
 def user(request, user):
     if user == request.user.username:
-      return redirect('/overview/')
+        return redirect('/overview/')
     else:
-      raise Http404()
+        raise Http404()
