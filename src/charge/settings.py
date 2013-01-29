@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse_lazy
 
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+MEDIA_ROOT = PROJECT_ROOT + '/../../var/media/'
 
 DATABASES = {
     'default': {
@@ -30,7 +31,6 @@ INSTALLED_APPS = [
 
 COMMENTS_APP = 'my_comments'
 
-
 ROOT_URLCONF = 'charge.urls'
 LOGIN_URL = reverse_lazy('auth_login')
 LOGIN_REDIRECT_URL = reverse_lazy('overview')
@@ -49,6 +49,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.messages.context_processors.messages',
 )
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
 
 MIDDLEWARES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',

@@ -48,6 +48,11 @@
         <td>
           {% if item.creator == user %}
           <a href="{% url item_update item.pk %}" title="Edit"><i class="icon-pencil"></i></a>
+          {% if item.receipt %}
+            <a href="{{ item.receipt.url }}" title="Receipt"><i class="icon-picture"></i></a>
+          {% else %}
+            <i class="icon-picture"></i>
+          {% endif %}
           <a href="{% url item_delete item.pk %}" title="Delete"><i class="icon-remove"></i></a>
           {% endif %}
         </td>

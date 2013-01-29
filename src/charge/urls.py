@@ -2,6 +2,7 @@
 
 from django.conf import settings
 from django.conf.urls import include, patterns, url
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
@@ -56,7 +57,7 @@ urlpatterns = patterns('',
     # user
     url(r'^overview/$', Overview.as_view(), name='overview'),
     url(r'^users/(?P<user>\w+)/$', 'charge.views.user', name='user')
-)
+) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
     urlpatterns += staticfiles_urlpatterns()

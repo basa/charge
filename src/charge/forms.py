@@ -47,6 +47,7 @@ class ItemForm(BaseForm):
             Fieldset('', 'event', 'name', 'cost',
                     'receipt'),
         )
+        enctype = 'multipart/form-data'
 
 
 class AuthenticationForm(BootstrapMixin, auth_forms.AuthenticationForm):
