@@ -91,6 +91,11 @@ class EventCreate(BaseCreateView):
     model = models.Event
     form_class = forms.EventForm
 
+    def get_initial(self):
+        initial = super(EventCreate, self).get_initial()
+        initial['participants'] = [self.request.user.pk]
+        return initial
+
 
 @login_required
 class EventDetail(detail.DetailView):
