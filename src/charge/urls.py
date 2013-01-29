@@ -6,10 +6,9 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from django.views.generic import DetailView, TemplateView
+from django.views.generic import TemplateView
 
 from charge.forms import AuthenticationForm, RegistrationForm
-from charge.models import Item
 from charge.views import (EventCreate, EventDelete, EventDetail, EventUpdate,
         ItemCreate, ItemDelete, ItemUpdate, Logout, Overview)
 
@@ -44,8 +43,6 @@ urlpatterns = patterns('',
 
     # Item related
     url(r'^item/add/$', ItemCreate.as_view(), name='item_add'),
-    url(r'^item/(?P<pk>\d+)/$', DetailView.as_view(model=Item),
-            name='item'),
     url(r'^item/(?P<pk>\d+)/update/$', ItemUpdate.as_view(),
             name='item_update'),
     url(r'^item/(?P<pk>\d+)/delete/$', ItemDelete.as_view(),

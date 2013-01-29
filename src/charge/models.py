@@ -37,9 +37,6 @@ class Item(models.Model):
     receipt = models.FileField(upload_to='receipts/%Y/%m/%d', null=True,
             blank=True)
 
-    def get_absolute_url(self):
-        return reverse('item', args=[str(self.pk)])
-
     def __unicode__(self):
         return self.name
 
