@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-import os
+import os.path
 
 from django.core.urlresolvers import reverse_lazy
 
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
-MEDIA_ROOT = PROJECT_ROOT + '/../../var/media/'
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, '..', '..', 'var', 'media')
 
 DATABASES = {
     'default': {
