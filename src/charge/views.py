@@ -138,11 +138,6 @@ class ItemUpdate(BaseUpdateView):
 
     def get_success_url(self):
         return reverse_lazy('event', args=[self.object.event.pk])
-      
-    def post(self, *args, **kwargs):
-        #receipt = self.request.FILES['receipt']
-        #self.item.event.receipt = receipt
-        return super(ItemUpdate, self).post(args, kwargs)
 
 
 @login_required
