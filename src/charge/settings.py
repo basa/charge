@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.comments',
     'bootstrap',
     'registration',
+    'rosetta',
     'charge',
     'my_comments',
 ]
@@ -52,10 +53,14 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
-MIDDLEWARES = (
+MIDDLEWARE_CLASSES = (
+    'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
 )
 
 LANGUAGES = (

@@ -50,11 +50,17 @@ urlpatterns = patterns('',
             name='item_delete'),
 
     # Event/Comments related
-    url(r'^comments/', include('django.contrib.comments.urls')),
+    (r'^comments/', include('django.contrib.comments.urls')),
 
     # user
     url(r'^overview/$', Overview.as_view(), name='overview'),
-    url(r'^users/(?P<user>\w+)/$', 'charge.views.user', name='user')
+    url(r'^users/(?P<user>\w+)/$', 'charge.views.user', name='user'),
+
+    # i18n
+    (r'^i18n/', include('django.conf.urls.i18n')),
+
+    # django-rosetta
+    (r'^rosetta/', include('rosetta.urls')),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
