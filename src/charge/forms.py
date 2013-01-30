@@ -24,11 +24,10 @@ class EventForm(BaseForm):
     """
     class Meta:
         model = Event
-        # creator would be assigned programmatically
+        # creator and event would be assigned programmatically
         exclude = ('creator',)
         layout = (
-            Fieldset('', 'name', 'location', 'start_date',
-                    'participants'),
+            Fieldset('', 'name', 'location', 'start_date', 'participants'),
         )
         widgets = {
             'start_date': SplitDateTimeWidget(attrs={'class': 'datepicker'}),
@@ -42,10 +41,9 @@ class ItemForm(BaseForm):
     class Meta:
         model = Item
         # creator would be assigned programmatically
-        exclude = ('creator',)
+        exclude = ('creator', 'event')
         layout = (
-            Fieldset('', 'event', 'name', 'cost',
-                    'receipt'),
+            Fieldset('', 'name', 'cost', 'receipt'),
         )
 
 

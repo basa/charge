@@ -7,15 +7,26 @@
   <h2>{{ object.name }}</h2>
   <div class="well well-small">
     <div class="btn-group pull-right">
-      <a class="btn" href="#"><i class="icon-list icon-white"></i> Event</a>
-      <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+      <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+        <i class="icon-list icon-white"></i>
+        <span class="caret"></span>
+      </a>
       <ul class="dropdown-menu">
-        <li><a href="{% url item_add %}"><i class="icon-plus-sign"></i> Add Item...</a></li>
-        <li><a href="#add_comment"><i class="icon-comment"></i> Comment</a></li>
+        <li><a href="{% url item_add object.pk %}">
+          <i class="icon-plus-sign"></i> Add Item
+        </a></li>
+        <li><a href="#add_comment">
+          <i class="icon-comment"></i> Comment
+        </a></li>
         {% if user == object.creator %}
-          <li class="divider"></li>
-          <li><a href="{% url event_update object.id %}"><i class="icon-pencil"></i> Edit...</a></li>
-          <li><a href="{% url event_delete object.pk %}"><i class="icon-remove"></i> Delete</a></li>
+        <li class="divider"></li>
+        <li>
+          <a href="{% url event_update object.id %}">
+            <i class="icon-pencil"></i> Edit
+        </a></li>
+        <li><a href="{% url event_delete object.pk %}">
+          <i class="icon-remove"></i> Delete
+        </a></li>
         {% endif %}
       </ul>
     </div>

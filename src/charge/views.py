@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.db.models import Q
 from django.utils.translation import ugettext as _
 from django.views.generic import base, detail, edit, list
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect
 
 from charge import forms, models
 from charge.utils import login_required
@@ -42,7 +42,6 @@ class BaseCreateView(CreatorMixin, edit.CreateView):
     The used Model should have a creator and name field.
     """
     success_message = '{name} created successfully'
-    success_url = reverse_lazy('overview')
 
     def form_valid(self, form):
         """ Display success message. """
@@ -89,6 +88,7 @@ class BaseDeleteView(FilterCreatorMixin, edit.DeleteView):
 class EventCreate(BaseCreateView):
     model = models.Event
     form_class = forms.EventForm
+    success_url = reverse_lazy('overview')
 
     def get_initial(self):
         initial = super(EventCreate, self).get_initial()
@@ -104,11 +104,8 @@ class EventDetail(detail.DetailView):
     model = models.Event
 
     def get_context_data(self, **kwargs):
-        # Call the base implementation first to get a context
         context = super(EventDetail, self).get_context_data(**kwargs)
-        # Add in Items
         context['items'] = models.Item.objects.filter(event=self.object)
-
         return context
 
 
@@ -129,28 +126,42 @@ class EventDelete(BaseDeleteView):
 
 ### Item related ##############################################################
 
-# TODO add event parameter
-@login_required
-class ItemCreate(BaseCreateView):
-    model = models.Item
-    form_class = forms.ItemForm
-
-
-@login_required
-class ItemUpdate(BaseUpdateView):
-    model = models.Item
-    form_class = forms.ItemForm
-
+class ItemSuccessUrlMixin(object):
+    """
+    Redirects to corresponding event.
+    """
     def get_success_url(self):
         return reverse_lazy('event', args=[self.object.event.pk])
 
 
 @login_required
-class ItemDelete(BaseDeleteView):
+class ItemCreate(ItemSuccessUrlMixin, BaseCreateView):
+    """
+    Create Item for given Event.
+    """
     model = models.Item
+    form_class = forms.ItemForm
 
-    def get_success_url(self):
-        return reverse_lazy('event', args=[self.object.event.pk])
+    def post(self, request, *args, **kwargs):
+        self.event = get_object_or_404(models.Event,
+                pk=self.kwargs['event_pk'], participants=self.request.user)
+        return super(ItemCreate, self).post(self, request, *args, **kwargs)
+
+    def form_valid(self, form):
+        """ Assigns event to form. """
+        form.instance.event = self.event
+        return super(ItemCreate, self).form_valid(form)
+
+
+@login_required
+class ItemUpdate(ItemSuccessUrlMixin, BaseUpdateView):
+    model = models.Item
+    form_class = forms.ItemForm
+
+
+@login_required
+class ItemDelete(ItemSuccessUrlMixin, BaseDeleteView):
+    model = models.Item
 
 
 @login_required
