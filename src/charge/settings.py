@@ -3,6 +3,7 @@ import os.path
 
 from django.core.urlresolvers import reverse_lazy
 
+_ = lambda s: s
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, '..', '..', 'var', 'media')
@@ -54,6 +55,12 @@ MEDIA_URL = '/media/'
 MIDDLEWARES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+)
+
+LANGUAGES = (
+    ('de', _('German')),
+    ('en', _('English')),
 )
 
 DEBUG = True
