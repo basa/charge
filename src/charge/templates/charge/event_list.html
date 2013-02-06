@@ -4,9 +4,9 @@
 {% block title %}{% trans "List of Events" %}{% endblock %}
 
 {% block main %}
-    <h2>Events</h2>
+    <h2>{% trans "Events" %}</h2>
     <a href="{% url event_add %}" class="btn btn-success btn-large">
-        Add event
+        {% trans "Add event" %}
     </a>
     <hr />
     {% if object_list %}

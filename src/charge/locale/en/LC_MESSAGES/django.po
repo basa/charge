@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-30 11:20-0600\n"
+"POT-Creation-Date: 2013-02-06 11:34-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,24 +17,160 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: settings.py:62
+#: forms.py:16
+msgid "Create {model_name}"
+msgstr ""
+
+#: forms.py:17
+msgid "Update {model_name}"
+msgstr ""
+
+#: settings.py:68
 msgid "German"
 msgstr ""
 
-#: settings.py:63
+#: settings.py:69
 msgid "English"
 msgstr ""
 
-#: views.py:186
+#: views.py:189
 msgid "You have been signed out."
 msgstr ""
 
-#: templates/charge/event_form.html:11
+#: templates/base.html:28 templates/charge/overview.html:4
+msgid "Overview"
+msgstr ""
+
+#: templates/base.html:33
+msgid "Log out"
+msgstr ""
+
+#: templates/base.html:35
+msgid "Sign up"
+msgstr ""
+
+#: templates/base.html:36
+msgid "Log in"
+msgstr ""
+
+#: templates/index.html:4 templates/index.html.py:8
+msgid "Welcome to Charge"
+msgstr ""
+
+#: templates/index.html:15 templates/charge/event_form.html:4
+msgid "Add a Event"
+msgstr ""
+
+#: templates/charge/event_detail.html:16 templates/charge/overview.html:39
+msgid "Add Item"
+msgstr ""
+
+#: templates/charge/event_detail.html:19
+msgid "Comment"
+msgstr ""
+
+#: templates/charge/event_detail.html:25
+msgid "Edit"
+msgstr ""
+
+#: templates/charge/event_detail.html:28
+msgid "Delete"
+msgstr ""
+
+#: templates/charge/event_detail.html:42
+msgid "owner"
+msgstr ""
+
+#: templates/charge/event_detail.html:47
+msgid "Items"
+msgstr ""
+
+#: templates/charge/event_detail.html:52
+msgid "Name"
+msgstr ""
+
+#: templates/charge/event_detail.html:53
+msgid "Amount"
+msgstr ""
+
+#: templates/charge/event_detail.html:54 templates/charge/overview.html:28
+msgid "Creator"
+msgstr ""
+
+#: templates/charge/event_detail.html:55
+msgid "Actions"
+msgstr ""
+
+#: templates/charge/event_detail.html:80
+msgid "There are no Items."
+msgstr ""
+
+#: templates/charge/event_detail.html:88
+msgid "Back to Overview"
+msgstr ""
+
+#: templates/charge/event_form.html:11 templates/charge/item_form.html:11
 msgid "Submit"
+msgstr ""
+
+#: templates/charge/event_history.html:4
+msgid "Event history"
+msgstr ""
+
+#: templates/charge/event_history.html:15
+msgid "Back to Event"
 msgstr ""
 
 #: templates/charge/event_list.html:4
 msgid "List of Events"
+msgstr ""
+
+#: templates/charge/event_list.html:7
+msgid "Events"
+msgstr ""
+
+#: templates/charge/event_list.html:9
+msgid "Add event"
+msgstr ""
+
+#: templates/charge/item_form.html:4
+msgid "Update Item"
+msgstr ""
+
+#: templates/charge/object_confirm_delete.html:9
+msgid "Yes"
+msgstr ""
+
+#: templates/charge/object_confirm_delete.html:10
+msgid "No"
+msgstr ""
+
+#: templates/charge/overview.html:7
+msgid "My Events"
+msgstr ""
+
+#: templates/charge/overview.html:15
+msgid "Create Event"
+msgstr ""
+
+#: templates/charge/overview.html:25
+msgid "Event"
+msgstr ""
+
+#: templates/charge/overview.html:26
+msgid "Location"
+msgstr ""
+
+#: templates/charge/overview.html:27
+msgid "Start date"
+msgstr ""
+
+#: templates/charge/overview.html:29
+msgid "Shortcuts"
+msgstr ""
+
+#: templates/charge/overview.html:45
+msgid "No Events."
 msgstr ""
 
 #: templates/comments/form.html:6

@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Charge | {% block title %}Untitled{% endblock %}</title>
+    <title>Charge | {% block title %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/css/bootstrap.css"
@@ -25,15 +25,15 @@
         <div class="container">
           <a class="brand" href="{% url index %}">Charge</a>
           <ul class="nav nav-pills">
-            <li><a href="{% url overview %}">Overview</a></li>
+            <li><a href="{% url overview %}">{% trans "Overview" %}</a></li>
           </ul>
           <ul class="nav pull-right">
             {% if user.is_authenticated %}
             <li><a href="{{ user.get_absolute_url }}">{{ user.username }}</a></li>
-            <li><a href="{% url auth_logout %}">Log out</a></li>
+            <li><a href="{% url auth_logout %}">{% trans "Log out" %}</a></li>
             {% else %}
-            <li><a href="{% url registration_register %}" class="btn-success">Sign up</a></li>
-            <li><a href="{% url auth_login %}">Log in</a></li>
+            <li><a href="{% url registration_register %}" class="btn-success">{% trans "Sign up" %}</a></li>
+            <li><a href="{% url auth_login %}">{% trans "Log in" %}</a></li>
             {% endif %}
           </ul>
         </div>

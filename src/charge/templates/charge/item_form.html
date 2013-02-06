@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Update Item{% endblock %}
+{% block title %}{% trans "Update Item" %}{% endblock %}
 
 {% block main %}
 <form action="" method="post" enctype="multipart/form-data" class="well">
   {{ form }}
   {% csrf_token %}
   <div class="form-actions">
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary">{% trans "Submit" %}</button>
   </div>
 </form>
 {% endblock main %}

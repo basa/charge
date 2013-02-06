@@ -6,6 +6,7 @@ from django.contrib.auth import views as auth_views
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.db.models import Q
 from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as __
 from django.views.generic import base, detail, edit, list
 from django.shortcuts import get_object_or_404, redirect
 
@@ -41,7 +42,7 @@ class BaseCreateView(CreatorMixin, edit.CreateView):
     """
     The used Model should have a creator and name field.
     """
-    success_message = '{name} created successfully'
+    success_message = __('{name} created successfully')
 
     def form_valid(self, form):
         """ Display success message. """
@@ -55,7 +56,7 @@ class BaseUpdateView(FilterCreatorMixin, edit.UpdateView):
     """
     The used Model should have a creator and name field.
     """
-    success_message = '{name} updated successfully'
+    success_message = __('{name} updated successfully')
 
     def form_valid(self, form):
         """ Display success message. """
@@ -71,7 +72,7 @@ class BaseDeleteView(FilterCreatorMixin, edit.DeleteView):
 
     The used Model should have a creator and name field.
     """
-    success_message = '{name} deleted successfully'
+    success_message = __('{name} deleted successfully')
     template_name = 'charge/object_confirm_delete.html'
 
     def delete(self, request, *args, **kwargs):
@@ -92,6 +93,7 @@ class EventCreate(BaseCreateView):
 
     def get_initial(self):
         initial = super(EventCreate, self).get_initial()
+        # request user is default participant
         initial['participants'] = [self.request.user.pk]
         return initial
 
@@ -143,6 +145,7 @@ class ItemCreate(ItemSuccessUrlMixin, BaseCreateView):
     form_class = forms.ItemForm
 
     def post(self, request, *args, **kwargs):
+        # request user must participant in related Event
         self.event = get_object_or_404(models.Event,
                 pk=self.kwargs['event_pk'], participants=self.request.user)
         return super(ItemCreate, self).post(self, request, *args, **kwargs)

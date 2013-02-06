@@ -3,6 +3,7 @@ from bootstrap.forms import BootstrapMixin, BootstrapModelForm, Fieldset
 from django.contrib.auth import forms as auth_forms
 from django.contrib.auth import models as auth_models
 from django.forms.widgets import SplitDateTimeWidget
+from django.utils.translation import ugettext as _
 from registration.forms import RegistrationFormUniqueEmail
 
 from charge.models import Event, Item
@@ -12,11 +13,10 @@ class BaseForm(BootstrapModelForm):
     def __init__(self, *args, **kwargs):
         """ Generate legend text automatically. """
         super(BaseForm, self).__init__(*args, **kwargs)
-
-        status = 'Create' if self.instance._state.adding else 'Update'
+        legend = (_('Create {model_name}') if self.instance._state.adding
+                else _('Update {model_name}'))
         model_name = self.Meta.model._meta.verbose_name
-        self.Meta.layout[0].legend = '{status} {model_name}'.format(
-                model_name=model_name, status=status)
+        self.Meta.layout[0].legend = legend.format(model_name=model_name)
 
 
 class EventForm(BaseForm):
@@ -25,7 +25,7 @@ class EventForm(BaseForm):
     """
     class Meta:
         model = Event
-        # creator and event would be assigned programmatically
+        # creator would be assigned programmatically
         exclude = ('creator',)
         layout = (
             Fieldset('', 'name', 'location', 'start_date', 'participants'),
@@ -36,6 +36,7 @@ class EventForm(BaseForm):
 
     def __init__(self, *args, **kwargs):
         super(EventForm, self).__init__(**kwargs)
+        # staff users can not be participants
         self.fields['participants'].queryset = (
                 auth_models.User.objects.exclude(is_staff=True))
 
@@ -46,7 +47,7 @@ class ItemForm(BaseForm):
     """
     class Meta:
         model = Item
-        # creator would be assigned programmatically
+        # creator and event would be assigned programmatically
         exclude = ('creator', 'event')
         layout = (
             Fieldset('', 'name', 'cost', 'receipt'),

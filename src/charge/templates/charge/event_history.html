@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Event history" %}{% endblock %}
+
+{% block main %}
+    <h2>Event history</h2>
+    {% if object_list %}
+    <ul>
+        {% for event in object_list %}
+            <li><a href="{% url item event.id %}">{{ event.name }}</a></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% trans "Back to Event" %}
+{% endblock %}
