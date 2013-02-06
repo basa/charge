@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from bootstrap.forms import BootstrapMixin, BootstrapModelForm, Fieldset
 from django.contrib.auth import forms as auth_forms
+from django.contrib.auth import models as auth_models
 from django.forms.widgets import SplitDateTimeWidget
 from registration.forms import RegistrationFormUniqueEmail
 
@@ -32,6 +33,11 @@ class EventForm(BaseForm):
         widgets = {
             'start_date': SplitDateTimeWidget(attrs={'class': 'datepicker'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super(EventForm, self).__init__(**kwargs)
+        self.fields['participants'].queryset = (
+                auth_models.User.objects.exclude(is_staff=True))
 
 
 class ItemForm(BaseForm):
