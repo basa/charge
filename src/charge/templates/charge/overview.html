@@ -35,7 +35,7 @@
       <td>{{ event.location }}</td>
       <td>{{ event.start_date }}</td>
       <td><a href="{{ event.creator.get_absolute_url }}">{{ event.creator }}</a></td>
-      <td><a href="{% url item_add event.pk %}">Add Item</a></td>
+      <td><a href="{% url item_add event.pk %}"><i class="icon-plus-sign" title="Add Item"></i></a></td>
     </tr>
     {% endfor %}
     </tbody>

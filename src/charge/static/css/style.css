@@ -38,3 +38,7 @@ body.shaded {
     margin-bottom: 15px;
     padding: 7px 9px;
 }
+
+#set-lang-form .dropdown-menu li {
+    cursor: pointer;
+}

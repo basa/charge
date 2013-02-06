@@ -36,12 +36,12 @@ msgstr ""
 
 #: templates/charge/event_list.html:4
 msgid "List of Events"
-msgstr ""
+msgstr "Deine Events"
 
 #: templates/comments/form.html:6
 msgid "Add Comment"
-msgstr ""
+msgstr "Kommentieren"
 
 #: templates/comments/form.html:7
 msgid "Preview"
-msgstr ""
+msgstr "Vorschau"

@@ -33,6 +33,9 @@ urlpatterns = patterns('',
              'form_class': RegistrationForm,
              'success_url': 'overview'}, name='registration_register'),
 
+    # set_language redirect view
+    (r'^i18n/', include('django.conf.urls.i18n')),
+
     # Event related
     url(r'^event/add/$', EventCreate.as_view(), name='event_add'),
     url(r'^event/(?P<pk>\d+)/$', EventDetail.as_view(), name='event'),
