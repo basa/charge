@@ -6,11 +6,10 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from django.views.generic import TemplateView
 
 from charge.forms import AuthenticationForm, RegistrationForm
 from charge.views import (EventCreate, EventDelete, EventDetail, EventUpdate,
-        ItemCreate, ItemDelete, ItemUpdate, Logout, Overview)
+        Index, ItemCreate, ItemDelete, ItemUpdate, Logout, Overview)
 
 
 admin.autodiscover()
@@ -20,7 +19,7 @@ urlpatterns = patterns('',
     # django.contrib.admin
     (r'^admin/', include(admin.site.urls)),
 
-    url(r'^$', TemplateView.as_view(template_name='index.html'), name='index'),
+    url(r'^$', Index.as_view(), name='index'),
 
     # django.contrib.auth
     url(r'^login/$', auth_views.login,

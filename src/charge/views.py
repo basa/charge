@@ -4,7 +4,7 @@ from django.http import Http404
 from django.contrib import messages
 from django.contrib.auth import views as auth_views
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy as __
 from django.views.generic import base, detail, edit, list
@@ -81,6 +81,17 @@ class BaseDeleteView(FilterCreatorMixin, edit.DeleteView):
         msg = self.success_message.format(name=name)
         messages.success(self.request, msg)
         return super(BaseDeleteView, self).delete(request, *args, **kwargs)
+
+
+class Index(base.TemplateView):
+    template_name = 'index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(Index, self).get_context_data(**kwargs)
+        # FIXME convert to base currency
+        context['total_costs'] = models.Item.objects.aggregate(
+                total_costs=Sum('cost'))['total_costs']
+        return context
 
 
 ### Event Related #############################################################
