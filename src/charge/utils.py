@@ -6,7 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils.decorators import method_decorator
 from decimal import Decimal
 from moneyed.classes import Money
-from charge import models
+import models
 
 
 def create_log_entry(object, user, action_flag):
