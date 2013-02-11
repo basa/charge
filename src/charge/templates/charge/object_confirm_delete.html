@@ -1,10 +1,16 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block title %}Delete {{ object.name }}{% endblock %}
+{% block title %}
+{% blocktrans with object_name=object.name %}
+Delete {{ object_name }}
+{% endblocktrans %}
+{% endblock %}
 
 {% block main %}
-  <p>Are you sure that you would like to delete {{ object.name }}?</p>
+  <p>{% blocktrans with object_name=object.name %}
+  Are you sure that you would like to delete {{ object_name }}?
+  {% endblocktrans %}</p>
   <form method="POST" action="">
     <button type="submit" class="btn btn-danger">{% trans "Yes" %}</button>
     <a href="{{ object.get_absolute_url }}">{% trans "No" %}</a>
