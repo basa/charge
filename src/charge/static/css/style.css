@@ -1,6 +1,7 @@
 @media (min-width: 979px) {
   body {
-    padding-top: 60px; // this is for fixed-top navigation
+    padding-top: 60px; /* this is for fixed-top navigation */
+    padding-bottom: 60px;
   }
   body.shaded {
     padding-top: 80px;
@@ -43,4 +44,11 @@
 
 #set-lang-form .dropdown-menu li {
     cursor: pointer;
+}
+
+.add_comment {
+  margin-top: 20px;
+}
+.add_comment legend {
+  margin-bottom: 0;
 }
