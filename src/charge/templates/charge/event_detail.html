@@ -12,9 +12,11 @@
         <span class="caret"></span>
       </a>
       <ul class="dropdown-menu">
-        <li><a href="{% url item_add object.pk %}">
-          <i class="icon-plus-sign"></i> {% trans "Add Item" %}
-        </a></li>
+        {% if not object.is_billed %}
+          <li><a href="{% url item_add object.pk %}">
+            <i class="icon-plus-sign"></i> {% trans "Add Item" %}
+          </a></li>
+        {% endif %}
         <li><a href="#add_comment">
           <i class="icon-comment"></i> {% trans "Comment" %}
         </a></li>
@@ -23,25 +25,47 @@
         <li>
           <a href="{% url event_update object.id %}">
             <i class="icon-pencil"></i> {% trans "Edit" %}
-        </a></li>
+          </a>
+        </li>
+        {% if object.is_billed %}
+        <li>
+          <a href="{% url event_unbill object.id %}">
+            <i class="icon-book"></i> {% trans "Reopen" %}
+          </a>
+        </li>
+        {% else %}
+        <li>
+          <a href="{% url event_bill object.id %}">
+            <i class="icon-ok"></i> {% trans "Bill" %}
+          </a>
+        </li>
+        {% endif %}
         <li><a href="{% url event_delete object.pk %}">
           <i class="icon-remove"></i> {% trans "Delete" %}
-        </a></li>
+          </a>
+        </li>
         {% endif %}
       </ul>
     </div>
     {% get_comment_count for object as comment_count %}
     <ul class="inline">
-      {% if comment_count > 0 %}
-      <li><a href="#comments"><i class="icon-comment"></i> {{ comment_count }}</a></li>
-      {% endif %}
-      <li><i class="icon-map-marker"></i> {{ object.location }}</li>
-      <li><i class="icon-calendar"></i> {{ object.start_date }}</li>
-      {% for participant in object.participants.all %}
-      <li><i class="icon-user"></i> {{ participant }}
-      {% if participant == object.creator %} ({% trans "owner" %}) {% endif %}
-      </li>
-      {% endfor %}
+    {% if comment_count > 0 %}
+        <li><a href="#comments"><i class="icon-comment"></i> {{ comment_count }}</a></li>
+    {% endif %}
+    <li><i class="icon-map-marker"></i> {{ object.location }}</li>
+    <li><i class="icon-calendar"></i> {{ object.start_date }}</li>
+    {% for participant in participants %}
+        <li>
+        <i class="icon-user"></i> {{ participant }}{% if participant == object.creator %}({% trans "owner" %}){% endif %}{% if participant.payment %}:
+          {% if participant.payment.amount.amount >= 0 %}
+            <span class="text-success">
+          {% else %}
+            <span class="text-error">
+          {% endif %}
+          {{ participant.payment.amount.amount }}€</span>
+        {% endif %}
+        </li>
+    {% endfor %}
     </ul>
 
     <h3>{% trans "Items" %}</h3>
@@ -62,13 +86,13 @@
         <td>{{ item.cost }}</td>
         <td>{{ item.creator }}</td>
         <td>
-          {% if item.creator == user %}
-          <a href="{% url item_update item.pk %}" title="Edit"><i class="icon-pencil"></i></a>
           {% if item.receipt %}
             <a href="{{ item.receipt.url }}" title="Receipt"><i class="icon-picture"></i></a>
           {% else %}
             <i class="icon-picture"></i>
           {% endif %}
+          {% if item.creator == user or object.creator == user %}
+          <a href="{% url item_update item.pk %}" title="Edit"><i class="icon-pencil"></i></a>
           <a href="{% url item_delete item.pk %}" title="Delete"><i class="icon-remove"></i></a>
           {% endif %}
         </td>

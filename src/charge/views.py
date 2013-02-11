@@ -119,6 +119,12 @@ class EventDetail(detail.DetailView):
     def get_context_data(self, **kwargs):
         context = super(EventDetail, self).get_context_data(**kwargs)
         context['items'] = models.Item.objects.filter(event=self.object)
+        participants = self.object.participants.all();
+        for participant in participants:
+            payments = self.object.payment_set.filter(user=participant)
+            if (payments.count() >= 1):
+                participant.payment = payments[0]
+        context['participants'] = participants
         return context
 
 
@@ -136,6 +142,19 @@ class EventDelete(BaseDeleteView):
     model = models.Event
     success_url = reverse_lazy('overview')
 
+def event_bill(request, pk):
+    event = models.Event.objects.get(pk=pk)
+    if not request.user == event.creator:
+        raise Http404()
+    event.bill()
+    return redirect(event.get_absolute_url())
+
+def event_unbill(request, pk):
+    event = models.Event.objects.get(pk=pk)
+    if not request.user == event.creator:
+        raise Http404()
+    event.unbill()
+    return redirect(event.get_absolute_url())
 
 ### Item related ##############################################################
 

@@ -42,6 +42,10 @@ urlpatterns = patterns('',
             name='event_update'),
     url(r'^event/(?P<pk>\d+)/delete/$', EventDelete.as_view(),
             name='event_delete'),
+    url(r'^event/(?P<pk>\d+)/bill/$', 'charge.views.event_bill',
+            name='event_bill'),
+    url(r'^event/(?P<pk>\d+)/unbill/$', 'charge.views.event_unbill',
+            name='event_unbill'),
 
     # Item related
     url(r'^item/add/(?P<event_pk>\d+)/$', ItemCreate.as_view(),

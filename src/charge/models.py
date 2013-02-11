@@ -5,7 +5,8 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import models
 from djmoney.models.fields import MoneyField
-
+from moneyed.classes import Money
+from charge.utils import convert
 
 class Event(models.Model):
     """
@@ -22,7 +23,45 @@ class Event(models.Model):
 
     def __unicode__(self):
         return self.name
+    
+    def find_or_create_payment_with_user(self, user):
+        payments = self.payment_set.filter(user=user)
+        if payments.count() < 1:
+            payment = Payment(user=user)
+            self.payment_set.add(payment)
+            return payment
+        else:
+            return payments[0]
 
+    def bill(self):
+        currency = 'EUR'
+        # accumulate items
+        event_cost = Money(amount='0.00', currency=currency)
+        paid = {}
+        for user in self.participants.all():
+            paid[user] = Money(amount='0.00', currency=currency)
+        currency_cache = {}
+        for item in self.item_set.all():
+            item_cost = convert(
+              item.cost,
+              currency,
+              currency_cache
+            )
+            event_cost += item_cost
+            paid[item.creator] += item_cost                
+        balance = event_cost / self.participants.count()
+        for user in self.participants.all():
+            imbalance = paid[user] - balance
+            payment = self.find_or_create_payment_with_user(user)
+            payment.amount = imbalance
+            payment.is_paid = False
+            payment.save()
+            
+    def unbill(self):
+        self.payment_set.all().delete()
+        
+    def is_billed(self):
+        return self.payment_set.all().count() > 0
 
 class Item(models.Model):
     """
@@ -42,3 +81,9 @@ class Item(models.Model):
 
 class Bill(models.Model):
     pass
+
+class Payment(models.Model):
+    user = models.ForeignKey(User)
+    event = models.ForeignKey(Event)
+    amount = MoneyField(max_digits=12, decimal_places=2, default_currency='EUR')
+    is_paid = models.BooleanField()
