@@ -40,6 +40,11 @@
           </a>
         </li>
         {% endif %}
+        </a></li>
+        <li>
+          <a href="{% url event_history object.id %}">
+            <i class="icon-book"></i> {% trans "History" %}
+        </a></li>
         <li><a href="{% url event_delete object.pk %}">
           <i class="icon-remove"></i> {% trans "Delete" %}
           </a>

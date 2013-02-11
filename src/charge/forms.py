@@ -3,7 +3,7 @@ from bootstrap.forms import BootstrapMixin, BootstrapModelForm, Fieldset
 from django.contrib.auth import forms as auth_forms
 from django.contrib.auth import models as auth_models
 from django.forms.widgets import SplitDateTimeWidget
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as __
 from registration.forms import RegistrationFormUniqueEmail
 
 from charge.models import Event, Item
@@ -13,8 +13,8 @@ class BaseForm(BootstrapModelForm):
     def __init__(self, *args, **kwargs):
         """ Generate legend text automatically. """
         super(BaseForm, self).__init__(*args, **kwargs)
-        legend = (_('Create {model_name}') if self.instance._state.adding
-                else _('Update {model_name}'))
+        legend = (__('Create {model_name}') if self.instance._state.adding
+                else __('Update {model_name}'))
         model_name = self.Meta.model._meta.verbose_name
         self.Meta.layout[0].legend = legend.format(model_name=model_name)
 
