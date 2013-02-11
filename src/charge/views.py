@@ -249,6 +249,21 @@ class Logout(base.View):
         login_url = reverse('auth_login')
         return auth_views.logout(request, next_page=login_url, *args, **kwargs)
 
+def payment_mark(request, pk):
+    payment = models.Payment.objects.get(pk=pk)
+    if not request.user == payment.receiver():
+        raise Http404()
+    payment.is_paid = True
+    payment.save()
+    return redirect(payment.event.get_absolute_url())
+
+def payment_unmark(request, pk):
+    payment = models.Payment.objects.get(pk=pk)
+    if not request.user == payment.receiver():
+        raise Http404()
+    payment.is_paid = False
+    payment.save()
+    return redirect(payment.event.get_absolute_url())
 
 def user(request, user):
     if user == request.user.username:

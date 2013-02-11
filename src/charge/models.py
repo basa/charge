@@ -66,6 +66,8 @@ class Event(models.Model):
             payment = self.find_or_create_payment_with_user(user)
             payment.amount = imbalance
             payment.is_paid = False
+            if user == self.creator:
+                payment.is_paid = True
             payment.save()
 
     def unbill(self):
@@ -98,3 +100,13 @@ class Payment(models.Model):
     event = models.ForeignKey(Event)
     amount = MoneyField(max_digits=12, decimal_places=2, default_currency='EUR')
     is_paid = models.BooleanField()
+
+    def receiver(self):
+        if self.user == self.event.creator:
+            return None
+        elif self.amount.amount > 0:
+            return self.user
+        elif self.amount.amount < 0:
+            return self.event.creator
+        else:
+            return None

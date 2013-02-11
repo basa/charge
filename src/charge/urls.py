@@ -60,7 +60,12 @@ urlpatterns = patterns('',
 
     # Event/Comments related
     (r'^comments/', include('django.contrib.comments.urls')),
-
+    
+    # Payment related
+    url(r'^payment/(?P<pk>\d+)/mark/$', 'charge.views.payment_mark',
+            name='payment_mark'),
+    url(r'^payment/(?P<pk>\d+)/unmark/$', 'charge.views.payment_unmark',
+            name='payment_unmark'),
     # user
     url(r'^overview/$', Overview.as_view(), name='overview'),
     url(r'^users/(?P<user>\w+)/$', 'charge.views.user', name='user'),

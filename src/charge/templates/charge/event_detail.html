@@ -60,7 +60,7 @@
     <li><i class="icon-map-marker"></i> {{ object.location }}</li>
     <li><i class="icon-calendar"></i> {{ object.start_date }}</li>
     {% for participant in participants %}
-        <li>
+      <li>
         <i class="icon-user"></i> {{ participant }}{% if participant == object.creator %}({% trans "owner" %}){% endif %}{% if participant.payment %}:
           {% if participant.payment.amount.amount >= 0 %}
             <span class="text-success">
@@ -68,8 +68,18 @@
             <span class="text-error">
           {% endif %}
           {{ participant.payment.amount.amount }}€</span>
+          {% if participant.payment.is_paid %}
+            <i class="icon-ok"></i>
+          {% endif %}
+          {% if user == participant.payment.receiver %}
+            {% if participant.payment.is_paid %}
+              (<a href="{% url payment_unmark participant.payment.pk %}"><i class="icon-remove"></i></a>)
+            {% else %}
+              (<a href="{% url payment_mark participant.payment.pk %}"><i class="icon-ok"></i></a>)
+            {% endif %}
+          {% endif %}
         {% endif %}
-        </li>
+      </li>
     {% endfor %}
     </ul>
 
@@ -97,8 +107,10 @@
             <i class="icon-picture"></i>
           {% endif %}
           {% if item.creator == user or object.creator == user %}
-          <a href="{% url item_update item.pk %}" title="Edit"><i class="icon-pencil"></i></a>
-          <a href="{% url item_delete item.pk %}" title="Delete"><i class="icon-remove"></i></a>
+            {% if not object.is_billed %}
+              <a href="{% url item_update item.pk %}" title="Edit"><i class="icon-pencil"></i></a>
+              <a href="{% url item_delete item.pk %}" title="Delete"><i class="icon-remove"></i></a>
+            {% endif %}
           {% endif %}
         </td>
       </tr>
