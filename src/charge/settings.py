@@ -65,6 +65,8 @@ MIDDLEWARE_CLASSES = (
     'charge.middleware.AdminLogout',
 )
 
+TIME_ZONE = 'Europe/London'
+
 LANGUAGES = (
     ('de', _('German')),
     ('en', _('English')),
