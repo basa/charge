@@ -8,7 +8,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as __
 from djmoney.models.fields import MoneyField
 from moneyed.classes import Money
-from charge.utils import convert
+
 
 class EventLogEntry(LogEntry):
     class Meta:
@@ -33,7 +33,7 @@ class Event(models.Model):
 
     def __unicode__(self):
         return self.name
-    
+
     def find_or_create_payment_with_user(self, user):
         payments = self.payment_set.filter(user=user)
         if payments.count() < 1:
@@ -44,6 +44,7 @@ class Event(models.Model):
             return payments[0]
 
     def bill(self):
+        from charge.utils import convert
         currency = 'EUR'
         # accumulate items
         event_cost = Money(amount='0.00', currency=currency)
@@ -58,7 +59,7 @@ class Event(models.Model):
               currency_cache
             )
             event_cost += item_cost
-            paid[item.creator] += item_cost                
+            paid[item.creator] += item_cost
         balance = event_cost / self.participants.count()
         for user in self.participants.all():
             imbalance = paid[user] - balance
@@ -66,10 +67,10 @@ class Event(models.Model):
             payment.amount = imbalance
             payment.is_paid = False
             payment.save()
-            
+
     def unbill(self):
         self.payment_set.all().delete()
-        
+
     def is_billed(self):
         return self.payment_set.all().count() > 0
 
@@ -90,6 +91,7 @@ class Item(models.Model):
 
     def __unicode__(self):
         return self.name
+
 
 class Payment(models.Model):
     user = models.ForeignKey(User)
