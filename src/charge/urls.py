@@ -8,8 +8,9 @@ from django.contrib.auth import views as auth_views
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from charge.forms import AuthenticationForm, RegistrationForm
-from charge.views import (EventCreate, EventDelete, EventDetail, EventUpdate,
-        Index, ItemCreate, ItemDelete, ItemUpdate, Logout, Overview)
+from charge.views import (EventCreate, EventDelete, EventDetail, EventHistory,
+        EventUpdate, Index, ItemCreate, ItemDelete, ItemUpdate, Logout,
+        Overview)
 
 
 admin.autodiscover()
@@ -42,6 +43,8 @@ urlpatterns = patterns('',
             name='event_update'),
     url(r'^event/(?P<pk>\d+)/delete/$', EventDelete.as_view(),
             name='event_delete'),
+    url(r'^event/(?P<pk>\d+)/history/$', EventHistory.as_view(),
+            name='event_history'),
 
     # Item related
     url(r'^item/add/(?P<event_pk>\d+)/$', ItemCreate.as_view(),

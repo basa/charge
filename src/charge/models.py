@@ -2,9 +2,15 @@
 import datetime
 
 from django.contrib.auth.models import User
+from django.contrib.admin.models import LogEntry
 from django.core.urlresolvers import reverse
 from django.db import models
 from djmoney.models.fields import MoneyField
+
+
+class EventLogEntry(LogEntry):
+    class Meta:
+        db_table = 'event_log'
 
 
 class Event(models.Model):
@@ -38,7 +44,3 @@ class Item(models.Model):
 
     def __unicode__(self):
         return self.name
-
-
-class Bill(models.Model):
-    pass

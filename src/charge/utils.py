@@ -2,7 +2,24 @@
 
 from django.contrib.auth.decorators import (login_required as
         auth_login_required)
+from django.contrib.contenttypes.models import ContentType
 from django.utils.decorators import method_decorator
+
+from charge import models
+
+
+def create_log_entry(object, user, action_flag):
+    content_type = ContentType.objects.get_for_model(object)
+    object_repr = repr(object)
+    models.EventLogEntry.objects.create(user=user, object_id=object.pk,
+            object_repr=object_repr, action_flag=action_flag,
+            content_type=content_type)
+
+
+def get_history(self, object):
+    content_type = ContentType.objects.get_for_model(self)
+    return models.EventLogEntry.objects.filter(object_id=object.pk,
+            content_type=content_type)
 
 
 def login_required(cls=None, **login_args):

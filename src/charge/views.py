@@ -2,28 +2,22 @@
 
 from django.http import Http404
 from django.contrib import messages
+from django.contrib.admin.models import ADDITION, CHANGE, DELETION
 from django.contrib.auth import views as auth_views
+from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.db.models import Q, Sum
+from django.http import HttpResponseRedirect
 from django.utils.translation import ugettext as _
 from django.utils.translation import ugettext_lazy as __
 from django.views.generic import base, detail, edit, list
 from django.shortcuts import get_object_or_404, redirect
 
 from charge import forms, models
-from charge.utils import login_required
+from charge.utils import create_log_entry, login_required
 
 
 ### Mixins ####################################################################
-
-class CreatorMixin(object):
-    """
-    Assigns requesting user as creator to the model object.
-    """
-    def form_valid(self, form):
-        form.instance.creator = self.request.user
-        return super(CreatorMixin, self).form_valid(form)
-
 
 class FilterCreatorMixin(object):
     """
@@ -38,18 +32,24 @@ class FilterCreatorMixin(object):
 
 ### BaseViews #################################################################
 
-class BaseCreateView(CreatorMixin, edit.CreateView):
+class BaseCreateView(edit.CreateView):
     """
     The used Model should have a creator and name field.
     """
     success_message = __('{name} created successfully')
 
     def form_valid(self, form):
-        """ Display success message. """
+        form.instance.creator = self.request.user
+        self.object = form.save()
+
+        # Display success message
         name = form.cleaned_data['name']
         msg = self.success_message.format(name=name)
         messages.success(self.request, msg)
-        return super(BaseCreateView, self).form_valid(form)
+
+        create_log_entry(self.object, self.request.user, ADDITION)
+
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class BaseUpdateView(FilterCreatorMixin, edit.UpdateView):
@@ -59,11 +59,16 @@ class BaseUpdateView(FilterCreatorMixin, edit.UpdateView):
     success_message = __('{name} updated successfully')
 
     def form_valid(self, form):
-        """ Display success message. """
+        self.object = form.save()
+
+        # Display success message
         name = self.object.name
         msg = self.success_message.format(name=name)
         messages.success(self.request, msg)
-        return super(BaseUpdateView, self).form_valid(form)
+
+        create_log_entry(self.object, self.request.user, CHANGE)
+
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class BaseDeleteView(FilterCreatorMixin, edit.DeleteView):
@@ -76,11 +81,17 @@ class BaseDeleteView(FilterCreatorMixin, edit.DeleteView):
     template_name = 'charge/object_confirm_delete.html'
 
     def delete(self, request, *args, **kwargs):
-        """ Display success message. """
-        name = self.get_object().name
+        self.object = self.get_object()
+        self.object.delete()
+
+        # Display success message
+        name = self.object.name
         msg = self.success_message.format(name=name)
         messages.success(self.request, msg)
-        return super(BaseDeleteView, self).delete(request, *args, **kwargs)
+
+        create_log_entry(self.object, self.request.user, DELETION)
+
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class Index(base.TemplateView):
@@ -135,6 +146,23 @@ class EventUpdate(BaseUpdateView):
 class EventDelete(BaseDeleteView):
     model = models.Event
     success_url = reverse_lazy('overview')
+
+
+@login_required
+class EventHistory(list.ListView):
+    model = models.EventLogEntry
+    template_name = 'charge/event_history.html'
+
+    def get_queryset(self):
+        event_pk = self.kwargs['pk']
+        item_ids = models.Item.objects.filter(event__in=event_pk).values_list(
+                'id', flat=True)
+        event_ct = ContentType.objects.get_for_model(models.Event)
+        event_filter = Q(content_type=event_ct, object_id=event_pk)
+        item_ct = ContentType.objects.get_for_model(models.Item)
+        item_filter = Q(content_type=item_ct, object_id__in=item_ids)
+        qs = self.model.objects.filter(event_filter | item_filter)
+        return qs
 
 
 ### Item related ##############################################################
