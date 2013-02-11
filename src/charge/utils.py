@@ -6,8 +6,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils.decorators import method_decorator
 from decimal import Decimal
 from moneyed.classes import Money
+from converter import ConversionRates
 import models
-
 
 def create_log_entry(object, user, action_flag):
     content_type = ContentType.objects.get_for_model(object)
@@ -68,8 +68,8 @@ def convert(amount, target_currency, cache={}):
         return amount
     if (source_currency, target_currency) not in cache:
         # cache miss
-        # TODO
-        cache[(source_currency, target_currency)] = Decimal('1.0')
+        rate = ConversionRates().get(source_currency, target_currency)
+        cache[(source_currency, target_currency)] = rate
     rate = cache[(source_currency, target_currency)]
     new_amount = amount.amount * rate
     return Money(amount=new_amount, currency=target_currency)
