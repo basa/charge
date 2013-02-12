@@ -10,6 +10,7 @@ from django.db.models import Sum
 from djmoney.models.fields import MoneyField
 from moneyed.classes import Money
 
+
 class EventLogEntry(LogEntry):
     class Meta:
         db_table = 'event_log'
@@ -44,24 +45,20 @@ class Event(models.Model):
             return payments[0]
 
     def bill(self):
-        from charge.utils import convert
         currency = 'EUR'
         # accumulate items
         event_cost = Money(amount='0.00', currency=currency)
+        participants = self.participants.all()
         paid = {}
-        for user in self.participants.all():
+
+        for user in participants:
             paid[user] = Money(amount='0.00', currency=currency)
-        currency_cache = {}
         for item in self.item_set.all():
-            item_cost = convert(
-              item.cost,
-              currency,
-              currency_cache
-            )
+            item_cost = item.convert_cost(currency)
             event_cost += item_cost
             paid[item.creator] += item_cost
-        balance = event_cost / self.participants.count()
-        for user in self.participants.all():
+        balance = event_cost / len(participants)
+        for user in participants:
             imbalance = paid[user] - balance
             payment = self.find_or_create_payment_with_user(user)
             payment.amount = imbalance
@@ -75,21 +72,23 @@ class Event(models.Model):
 
     def is_billed(self):
         return self.payment_set.all().count() > 0
-    
+
     def is_done(self):
-        return self.is_billed() and not self.payment_set.filter(is_paid=False).exists()
-    
+        return (self.is_billed() and
+                not self.payment_set.filter(is_paid=False).exists())
+
     def user_open_inbound_payments(self, user):
         if user == self.creator:
             result = self.payment_set.filter(is_paid=False, amount__lt=0).aggregate(Sum('amount'))['amount__sum']
             return -result if result else result
         return self.payment_set.filter(user=user, is_paid=False, amount__gt=0).aggregate(Sum('amount'))['amount__sum']
-        
+
     def user_open_outbound_payments(self, user):
         if user == self.creator:
             return self.payment_set.filter(is_paid=False, amount__gt=0).aggregate(Sum('amount'))['amount__sum']
         result = self.payment_set.filter(user=user, is_paid=False, amount__lt=0).aggregate(Sum('amount'))['amount__sum']
         return -result if result else result
+
 
 class Item(models.Model):
     """
@@ -109,12 +108,19 @@ class Item(models.Model):
     def __unicode__(self):
         return self.name
 
+    def convert_cost(self, to_currency='EUR'):
+        from charge.utils import convert
+        return convert(self.cost, to_currency)
+
 
 class Payment(models.Model):
     user = models.ForeignKey(User)
     event = models.ForeignKey(Event)
     amount = MoneyField(max_digits=12, decimal_places=2, default_currency='EUR')
     is_paid = models.BooleanField()
+
+    class Meta:
+        unique_together = ('user', 'event')
 
     def receiver(self):
         if self.user == self.event.creator:

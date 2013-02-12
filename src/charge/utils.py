@@ -4,10 +4,9 @@ from django.contrib.auth.decorators import (login_required as
         auth_login_required)
 from django.contrib.contenttypes.models import ContentType
 from django.utils.decorators import method_decorator
-from decimal import Decimal
-from moneyed.classes import Money
-from converter import ConversionRates
-import models
+
+from charge import converter, models
+
 
 def create_log_entry(object, user, action_flag):
     content_type = ContentType.objects.get_for_model(object)
@@ -21,6 +20,7 @@ def get_history(self, object):
     content_type = ContentType.objects.get_for_model(self)
     return models.EventLogEntry.objects.filter(object_id=object.pk,
             content_type=content_type)
+
 
 def login_required(cls=None, **login_args):
     """
@@ -61,15 +61,10 @@ def login_required(cls=None, **login_args):
 
         return inner_decorator
 
-def convert(amount, target_currency, cache={}):
+
+def convert(amount, target_currency):
     source_currency = amount.currency
     if source_currency == target_currency:
         # no conversion necessary
         return amount
-    if (source_currency, target_currency) not in cache:
-        # cache miss
-        rate = ConversionRates().get(source_currency, target_currency)
-        cache[(source_currency, target_currency)] = rate
-    rate = cache[(source_currency, target_currency)]
-    new_amount = amount.amount * rate
-    return Money(amount=new_amount, currency=target_currency)
+    return converter.convert(amount, target_currency)
