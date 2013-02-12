@@ -17,7 +17,9 @@ admin.autodiscover()
 
 
 urlpatterns = patterns('',
-    # django.contrib.admin
+    # django-rosetta (define before including admin.site.urls)
+    (r'^admin/translation/', include('rosetta.urls')),
+    # django.contrib.admin (define after including rosetta.urls)
     (r'^admin/', include(admin.site.urls)),
 
     url(r'^$', Index.as_view(), name='index'),
@@ -60,7 +62,7 @@ urlpatterns = patterns('',
 
     # Event/Comments related
     (r'^comments/', include('django.contrib.comments.urls')),
-    
+
     # Payment related
     url(r'^payment/(?P<pk>\d+)/mark/$', 'charge.views.payment_mark',
             name='payment_mark'),
@@ -72,9 +74,6 @@ urlpatterns = patterns('',
 
     # i18n
     (r'^i18n/', include('django.conf.urls.i18n')),
-
-    # django-rosetta
-    (r'^rosetta/', include('rosetta.urls')),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
