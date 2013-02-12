@@ -1,4 +1,5 @@
-<h3>Comments</h3>
+{% load i18n %}
+<h3>{% trans "Comments" %}</h3>
 {% if comment_list %}
 <dl id="comments">
   {% for comment in comment_list %}
@@ -11,5 +12,5 @@
   {% endfor %}
 </dl>
 {% else %}
-There are no comments.
+{% trans "There are no comments." %}
 {% endif %}

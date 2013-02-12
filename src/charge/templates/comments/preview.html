@@ -1,6 +1,7 @@
 {% extends "base.html" %}
+{% load i18n %}
 
-{% block title %}Preview Comment{% endblock %}
+{% block title %}{% trans "Preview Comment" %}"{% endblock %}
 
 {% block main %}
 {% include "comments/form.html" %}
