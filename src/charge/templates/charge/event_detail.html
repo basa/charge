@@ -30,13 +30,13 @@
         {% if object.is_billed %}
         <li>
           <a href="{% url event_unbill object.id %}">
-            <i class="icon-unlock"></i> {% trans "Reopen" %}
+            <i class="icon-inbox"></i> {% trans "Reopen" %}
           </a>
         </li>
         {% else %}
         <li>
           <a href="{% url event_bill object.id %}">
-            <i class="icon-ok"></i> {% trans "Bill" %}
+            <i class="icon-random"></i> {% trans "Bill" %}
           </a>
         </li>
         {% endif %}
@@ -54,6 +54,13 @@
     </div>
     {% get_comment_count for object as comment_count %}
     <ul class="inline">
+    {% if object.is_billed %}
+      {% if object.is_done %}
+        <li><i class="icon-ok"></i> {% trans "Done" %}</li>
+      {% else %}
+        <li><i class="icon-random"></i> {% trans "Billed" %}</li>
+      {% endif %}
+    {% endif %}
     {% if comment_count > 0 %}
         <li><a href="#comments"><i class="icon-comment"></i> {{ comment_count }}</a></li>
     {% endif %}

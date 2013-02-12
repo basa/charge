@@ -234,9 +234,13 @@ class Overview(list.ListView):
         """ User should only see his objects. """
         base_qs = super(Overview, self).get_queryset()
         current_user = self.request.user
-        return base_qs.filter(Q(creator=current_user) |
-                Q(participants=current_user)).distinct()
-
+        queryset = base_qs.filter(Q(creator=current_user) |
+            Q(participants=current_user)).distinct()
+        for event in queryset:
+            user_payments = event.payment_set.filter(user=current_user)
+            event.user_inbound_payments = event.user_open_inbound_payments(current_user)
+            event.user_outbound_payments = event.user_open_outbound_payments(current_user)
+        return queryset
 
 @login_required
 class Logout(base.View):

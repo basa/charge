@@ -6,9 +6,9 @@ from django.contrib.admin.models import LogEntry
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.translation import ugettext_lazy as __
+from django.db.models import Sum
 from djmoney.models.fields import MoneyField
 from moneyed.classes import Money
-
 
 class EventLogEntry(LogEntry):
     class Meta:
@@ -75,6 +75,21 @@ class Event(models.Model):
 
     def is_billed(self):
         return self.payment_set.all().count() > 0
+    
+    def is_done(self):
+        return self.is_billed() and not self.payment_set.filter(is_paid=False).exists()
+    
+    def user_open_inbound_payments(self, user):
+        if user == self.creator:
+            result = self.payment_set.filter(is_paid=False, amount__lt=0).aggregate(Sum('amount'))['amount__sum']
+            return -result if result else result
+        return self.payment_set.filter(user=user, is_paid=False, amount__gt=0).aggregate(Sum('amount'))['amount__sum']
+        
+    def user_open_outbound_payments(self, user):
+        if user == self.creator:
+            return self.payment_set.filter(is_paid=False, amount__gt=0).aggregate(Sum('amount'))['amount__sum']
+        result = self.payment_set.filter(user=user, is_paid=False, amount__lt=0).aggregate(Sum('amount'))['amount__sum']
+        return -result if result else result
 
 class Item(models.Model):
     """
