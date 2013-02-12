@@ -105,7 +105,7 @@
       {% for item in items %}
       <tr>
         <td>{{ item.name }}</td>
-        <td>{{ item.cost }}</td>
+        <td>{{ item.cost }} {% if item.cost_currency != 'EUR' %}({{ item.convert_cost }}){% endif %}</td>
         <td>{{ item.creator }}</td>
         <td>
           {% if item.receipt %}
